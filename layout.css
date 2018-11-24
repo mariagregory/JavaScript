@@ -1,0 +1,86 @@
+@charset "UTF-8";
+
+/*
+ Styles for Final Project Layout
+*/
+body {
+	background-color: BlanchedAlmond;
+	font-family: Helvetica, Arial, sans-serif;
+	color: SaddleBrown;
+	max-width: 1280px; margin-left: auto; margin-right: auto;
+}
+header {
+	height : 120px; /* set an appropriate height for this banner area */
+}   
+nav {
+	width : 200px;  /* optionally set an appropriate width for this sidebar area */
+	float : left;   /* must float left or right to allow main content to sit next to it */
+	height: 750px;  /* set a height as needed if main page text is wrapping below sidebar; */
+	text-align: center;
+}
+h1 { font-family: "Comic Sans MS", cursive, sans-serif; color: DarkRed; 
+}
+#main {
+	margin-left: 220px; /* Match this to nav's width above to keep content away from nav */	
+}
+#homePage #main {
+	line-height: 1.5;
+}
+.co-photo {
+	float: left;
+	margin: 10px 20px 10px 0px;
+	border: 1px DarkRed solid;
+	border-radius: 20px;
+}
+img[src='wereopen.png'] { /* on "index" page */
+	float: right;
+	margin-left: 30px;
+}
+#main ul {
+	margin-right: 250px; 
+}
+#main ul + p {
+	margin-right: 250px; 
+}
+footer {
+	margin-top: 50px; /* optionally separate copyright from main content by some amount */
+}
+#divGuestArea {
+	font-weight: bold;
+	margin-bottom: 50px;
+}
+form {
+	max-width: 70%;
+}
+#cartTable {
+	border-collapse: collapse;
+}
+#shopTable, #shopTable td {	
+	border: 1px ridge brown; 
+}
+#shopTable td:last-child img {	/* targets "Add to cart" and "Remove" buttons on Shop page */
+	cursor: pointer; 
+}
+#cartTable img {
+	width: 50%; /* display smaller-size versions of pictures on Cart and Checkout pages */
+}
+input, select { margin: 10px;
+}
+div#whatsInCart { /* paragraph on Shop page showing the current cart's contents */
+	margin: 25px 0;
+}
+div#howToChangeQ { /* text block on Shop page, explaining how to make changes in product quantities */
+	margin-top: 100px;
+	text-align: left;
+	font-size: 95%;
+	font-style: italic;
+}
+fieldset {
+	margin: 20px 0 20px 0;
+	width: auto;
+}
+span.notice { color: darkred; font-weight: bold; 
+}
+img[src='add-to-cart-button1.gif']:hover {
+	content: url("add-to-cart-button-yellow.gif"); // 'content' statement for img selector doesn't work in Firefox
+}

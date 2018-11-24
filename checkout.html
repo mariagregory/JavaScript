@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>MARIIA GREGORY's Final Project Checkout</title>
+	<link href="layout.css" type="text/css" rel="stylesheet">
+	<style> .redAsterisk {	color:red; font-weight: bold; font-size: 120%; } </style>
+	
+<script type="text/javascript" src="guest-functions.js"></script>
+<script type="text/javascript" src="cart-functions.js"></script>
+<script type="text/javascript" src="checkout-functions.js"></script>
+<script>
+window.onload = function() {	setGuest(); updateCartTotal(); 
+
+// the first 3 things we need to do as soon as the page is loaded is to mark required fields with red asterisks, assign an event handler to Enter key press, and fill in the "Full Name" input box with the user's full name.
+	
+	// 1) insert red asterisks for labels of required fields
+	var requiredFields = document.getElementsByClassName("required");
+	for(var i=0; i < requiredFields.length; i++) {
+		var labelObject = requiredFields[i].parentNode; // get the parental element, surrounding it
+		// declare 2 local variables to store 2 parts of the 'labelObject' contents: the label and the required textbox itself
+		var label ='', textBox ='';
+		for(var j=0; j<labelObject.innerHTML.length; j++) {
+			if(labelObject.innerHTML[j] != "<") { // copy all characters before any inner opening tag is encountered (it's where the required textBox starts)
+				label += labelObject.innerHTML[j];
+			} else break;
+		}
+		// 'textBox' string will contain everything that's left
+		for(var k = label.length; k < labelObject.innerHTML.length; k++) {
+			textBox += labelObject.innerHTML[k];
+		}
+		labelObject.innerHTML = label + "<span class=\"redAsterisk\">*</span>" + textBox;
+	}
+	
+	// 2) write an event handler for presing Enter in the input boxes. Treat Enter press as calling processOrder() function
+	var input = document.getElementsByTagName('input');
+	for(var i=0; i<input.length; i++) {
+		input[i].onkeypress = handleKeyPress; // 'onkeypress' doesn't work ONLY for 'input' tags with class="required" .....
+												// ... in case I exchange order of parts 1 - red asterics, and 2 - this one. Don't know why.
+	}
+	function handleKeyPress(e) { // 'e' is an event object ('keypress' in this case)
+		if(e.keyCode == 13 || e.which == 13) { 		// keyCode 13 is the Enter key
+			processOrder(); 
+		}
+	}
+	// 3) read the customer's full name from LS and place it as a value of a textbox labeled "Your Full Name"
+	//	If the user is Guest, fill the Full Name box with "Current Resident"
+	if(localStorage.getItem('lsName')) {
+		document.forms['checkout'].fullName.value=localStorage.getItem('lsName');
+	} else document.forms['checkout'].fullName.value="Current Resident";
+}
+</script>
+
+</head>
+
+<body>
+<header><a href='index.html'><img src="mycompany-logo.png" width="798" height="82" alt="My Company" /></a></header>
+<nav>
+<form id="form1" name="form1" method="post">
+<p>Choose a page to visit:<br>
+  <select name="select" id="select" onchange="javascript:window.location.href=this.value;">
+    <option value="index.html">Home</option>
+    <option value="shop.html">Shop</option>
+    <option value="cart.html">Cart</option>
+ 	<option value="checkout.html" selected="selected">Checkout</option>
+  </select>
+</p>
+</form>
+
+<p>&nbsp;</p>
+
+<div id="divGuestArea">&nbsp;</div>
+</nav>
+
+<div id="main">
+<h1>Checkout</h1>
+<p>Here we go, you are almost done! Just fill out the form below, and your order is on the way.</p>
+
+<form name="checkout" action="thankyou.html" method="post">
+	<table id="cartTable" border="1" cellpadding="8">
+		<script>showCart();</script>
+	</table>
+	
+	<p align='right'><input type="button" value="Back to Your Cart" onclick="window.location.href='cart.html';" /></p>
+	
+	<label>Your Full Name: <input type='text' name='fullName' placeholder='Type your FULL name here' /></label>
+	<fieldset><legend>Please choose a shipping option:</legend>
+		<label><input type="radio" name="shipping$" value="2" checked />Standard Shipping ($2)</label>&nbsp;&nbsp;&nbsp;
+		<label><input type="radio" name="shipping$" value="5" />2-Day Shipping ($5)</label>&nbsp;&nbsp;&nbsp;
+		<label><input type="radio" name="shipping$" value="10" />Overnight Shipping ($10)</label>
+	</fieldset>
+	
+	<fieldset><legend>Please ender your shipping address</legend>
+		<label>Street and House #<input type="text" name="streetNo" class="required" /></label>
+        <label>City/Town<input type="text" name="city" class="required" /></label><br/>
+        <label>State / Region / Province<input type="text" name="state" class="required"  /></label><br/>
+        <label>Zip code<input type="text" name="zip" class="required"  /></label>
+		<label>Postal code<input type="text" name="postCode" /></label><br/>
+		<label>Country<input type="text" name="country" class="required"  /></label>	
+	</fieldset>
+	
+	<label>Your phone number:<input type="text" id="phoneNo" name="phoneNo" maxlength="12" class="required"/></label><span id="phoneHint">(use 10-digit, 123-456-7890, or (123) 456-7890 format)</span>
+			
+	<fieldset><legend>Payment Details</legend>
+		<select name="payMethod" >
+			<option value="Visa">Visa Credit</option><option value="MasterCard">MasterCard Credit</option>
+			<option value="American Express">American Express Credit</option>
+			<option value="Debit">Debit Card</option><option value="PayPal">PayPal</option>
+		</select><br/>
+		<label>Card#:<input type="text" name="cardNo" maxlength="16" class="required" /></label><span id="cardHint">(use 16-digit sequence, no other characters please.</span><br/>
+		<label>Expiration Month
+			<select name="expMonth" class="required">
+				<option name="expMonth" value="Jan">January</option><option name="expMonth" value="Feb">February</option>
+				<option name="expMonth" value="Mar">March</option><option name="expMonth" value="Apr">April</option>
+				<option name="expMonth" value="May">May</option><option name="expMonth" value="Jun">June</option>
+				<option name="expMonth" value="Jul">July</option><option name="expMonth" value="Aug">August</option>
+				<option name="expMonth" value="Sep">September</option><option name="expMonth" value="Oct">October</option>
+				<option name="expMonth" value="Nov">November</option><option name="expMonth" value="Dec">December</option>
+			</select>
+		</label>
+		<label>Expiration Year <select name="expYear" class="required"><script>expandYears("expYear");</script></select></label><br/>
+			
+	</fieldset>
+	
+	<p>	<input type="button" value="Complete Payment" onClick="processOrder();" />	</p>
+</form>
+<p><span class="redAsterisk">*</span> indicates a required field.</p>
+	
+<div id="receipt">&nbsp;</div>
+
+<footer>
+Copyright &copy; 2016 Piece of Nature.
+</footer>
+</div>
+</body>
+</html>

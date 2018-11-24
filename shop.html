@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>MARIIA GREGORY's Final Project Shop</title>
+	<link href="layout.css" type="text/css" rel="stylesheet">
+	
+<style>
+.quantity { 
+	width: 55px; 
+}
+</style>
+<script type="text/javascript" src="guest-functions.js"></script>
+<script type="text/javascript" src="cart-functions.js"></script>
+<script>
+
+function add2Cart(button, prodID)	{
+// Add a specified item in the cart. "prodID" parameter has q# format. "Button" is either "Add to Cart" or "Remove" button next to the product ordered.
+	var qBox = document.getElementById(prodID);
+	var qValue; // local variable to store a quantity tempoparily
+	
+	if(!button.src.match("green")) { // if the button is NOT green, i.e. if it's "Add to Cart", capture a value in q# box and assign it to qValue
+		qValue = qBox.value;
+		if(!isNaN(qValue) && parseInt(qValue)>0) { // if a value is positive...
+			button.src="add-to-cart-button-green.gif"; // ...change 'button' picture to green version, one with "Remove" text
+			qBox.disabled="true"; // disable ability to make farther changes in quantity, so to avoid confusion
+		}
+	} else { // if the 'button' IS green -- the "Remove" one -- nullify the quantity, change the 'button' picture to "Add to Cart", and enable changes
+		qValue="0";
+		button.src="add-to-cart-button1.gif";	
+		qBox.removeAttribute("disabled");
+	}
+	
+	var userNo = localStorage.getItem('userNo'); // Try to retrieve a user account from Local Storage.
+	// if it's a registered user, retrieve his cart and write the quantity to a corresponding position in his/her cart
+	if(userNo!='-1') { // userNo '-1' is Guest, otherwise it's a registered user
+		var userAcc = JSON.parse(localStorage.getItem('userAccounts'));
+		var prodIndex = userAcc[userNo].products.indexOf(prodID);	
+		userAcc[userNo].quantities[prodIndex] = qValue;
+		localStorage.setItem('userAccounts', JSON.stringify(userAcc)); 
+	} else { // if it's Guest, write the quantity as 'q#' variable in LS
+		localStorage.setItem(prodID, JSON.stringify(qValue));
+	}
+	updateCartTotal(); whatsInCart(); // reflect changes in the left part of the page
+}
+
+function clearCart() {
+// Zero out all cart items using local storage, so that all pages recognize cart is now empty
+// Collect all 'input'-objects, then choose only those having 'q#' format and nullify their values
+// Then remove all corresponding variables from LS
+	var qBoxFormat = /^q\d+/;
+	var qBoxes = document.getElementsByTagName("input");
+	for(var i=0; i<qBoxes.length; i++) {
+		if(qBoxFormat.test(qBoxes[i].id)) { // check if the field id has 'q#' format
+			localStorage.removeItem(qBoxes[i].id); // q# is now removed from LS
+			qBoxes[i].value = "0";
+			qBoxes[i].removeAttribute("disabled");
+		}
+	} // reset all 'button' images to "add to Cart" version
+	var images = document.getElementsByTagName('img');
+	for(var i=0; i<images.length; i++) {
+		if(images[i].src.match("add-to-cart")) {
+			images[i].src="add-to-cart-button1.gif";
+		}
+	}
+	// if a registered user is active, clear his cart
+	var userNo = localStorage.getItem('userNo');
+	if(userNo!='-1') { // userNo '-1' is Guest, otherwise it's a registered user
+		var userAcc = JSON.parse(localStorage.getItem('userAccounts'));
+		clearUserCart(userAcc, userNo);	
+		localStorage.setItem('userAccounts', JSON.stringify(userAcc) );
+	} else {
+		// If it's Guest, clear all quantities in the cart. They are items stored in LS as 'q1', 'q2', etc., 
+		clearGuestCart(); // it's in 'cart-functions.js' page
+	}
+	updateCartTotal(); whatsInCart(); // reflect changes in the left side of the page
+}
+
+function whatsInCart() {
+// Collect information about how many of each products is ordered 
+// and display this info on the left side of the Shop page, below the summary of total # of items ordered
+// If no items are ordered, nothing is displayed
+// Additionally, display a text explaining what steps are needed to change the quantity of a product ordered
+	var itemsInCart = document.getElementById('itemsInCart');
+	if(itemsInCart) {
+		var prName; 
+		var whatIsAdded = "";
+		var thisProdQ; // will store the quantity of each following product ordered
+		
+		var userNo = localStorage.getItem('userNo'); 
+		// if the current user is a registered user, read his/her cart and display the list of products and quantities ordered (if any)
+		if(userNo!='-1') { // userNo '-1' is Guest, otherwise it's a registered user
+			var userAcc = JSON.parse(localStorage.getItem('userAccounts'));
+			
+			for(var i=1; i<=userAcc[userNo].products.length; i++) {
+				thisProdQ = userAcc[userNo].quantities[i-1];
+				console.log(thisProdQ);
+				if(thisProdQ>0) { 
+					prName = document.getElementById('pr'+i).innerHTML;
+					whatIsAdded += "<br/><br/>" + prName + ": " + thisProdQ;
+				}
+			}
+		} else { // if the user is Guest, first find out how many products are in Shop table. Suppose we don't know that there are only 4 of them...
+			var prodsCount = parseInt(localStorage.getItem('prodsCount')); // holds # of products for sale. Set to LS on "shop.html" document
+			// I tried to read the 'prodsCount' as 'products' array length, the copy of which I stored in LS in "cart.html" document,
+			// but the problem was that 'products' array is accessible only after "cart.html" is visited.
+			// Before that, even if Guest is just opened the site and added anything, the message was that the cart was still empty......
+			// if # of objects in 'products' array is the same as # of products listed in "Shop" page, then everything should work perfectly.
+			console.log("prodsCount in whatsInCart() is " + prodsCount);
+			for(var i=1; i<=prodsCount; i++) {	// Now we go through all products and see which ones are in the Guest's cart
+				thisProdQ = localStorage.getItem('q' + i); // if Guest added anything, q# variable is present in LS
+				if(thisProdQ) {
+					thisProdQ = JSON.parse(thisProdQ);
+					prName = document.getElementById('pr'+i).innerHTML; // read the product's name from the 
+					whatIsAdded += "<br/><br/>" + prName + ": " + thisProdQ;
+				}
+			}
+		} 
+		// write the order summary below the paragraph on the total # of items ordered
+		var whatIsThere = document.getElementById('whatsInCart');
+		if(!whatIsThere) {
+			document.getElementById('cartMessage').innerHTML += "<div id='whatsInCart'>&nbsp;</div>";
+			whatIsThere = document.getElementById('whatsInCart');
+		}
+		whatIsThere.innerHTML = whatIsAdded;
+		
+		// Additionally, display a text explaining what steps are needed to change the quantity of a product ordered
+		whatIsThere.innerHTML += "<div id='howToChangeQ'>To <b>change</b> a quantity:<ol></p>"
+				+ "<li>Click '<b>Remove</b>' button next to the item you wish to change.</li>"
+				+ "<li>Add new quantity.</li>"
+				+ "<li>Click '<b>Add to Cart</b>' to verify the change.</li></ol>"
+			+ "If there is no 'Remove' button, skip #1 and start from #2.</div>";
+	}
+}
+
+window.onload = function() { setGuest(); updateCartTotal(); whatsInCart(); // all 3 functions are called upon the page loading
+	// Go through all the 'input' boxes in the document and count all that have "q#" format. The resulting number should represent total # of products for sale
+	var qBoxFormat = /^q\d+/;
+	var qBoxes = document.getElementsByTagName("input");
+	var prodsCount=0;
+	for(var i=0; i<qBoxes.length; i++) {
+		if(qBoxFormat.test(qBoxes[i].id)) {
+			prodsCount++;
+		}
+	} localStorage.setItem('prodsCount', prodsCount);
+}
+
+</script>
+		
+</head>
+
+<body>
+<header><a href='index.html'><img src="mycompany-logo.png" width="798" height="82" alt="My Company" /></a></header>
+<nav>
+<form id="form1" name="form1" method="post">
+<p>Choose a page to visit:<br>
+  <select name="select" id="select" onchange="javascript:window.location.href=this.value;">
+    <option value="index.html">Home</option>
+    <option value="shop.html" selected="selected">Shop</option>
+    <option value="cart.html">Cart</option>
+    <option value="checkout.html">Checkout</option>
+  </select>
+</p>
+</form>
+
+<p>&nbsp;</p>
+
+<div id="divGuestArea">&nbsp;</div>
+</nav>
+
+<div id="main">
+<h1>Shop</h1>
+<p>Enjoy the highest quality of our 100% organic production. Everything we ship retains its form and functions, so you can't tell a difference from the one found in its natural habitat. Order now and expand your horizon by experimenting with natural ingredients our planet has to offer.</p>
+<table id="shopTable" cellspacing="0" cellpadding="6">
+  <tbody>
+    <tr>
+      <td><img src="product1.jpg" width="140" height="140" alt="Buy Sea Water"/></td>
+      <td><p>Mediterranean <span id='pr1'>Sea Water</span> from Greece!</p>
+        <p>Seawater is quite beneficial to your health. It increases your skin's elasticity, thus, improving your outer look. Salt water plays important role in treating eczema, psoriasis, and acne. Swimming in salt water easily relieves stress and reduces the inflammation of joints and muscles. Minerals contained in sea water help in relieving muscle pains and soreness. Swimming in the salt water helps keep you beautiful outside and healthy inside.</p></td>
+      <td>Price:<br>$5.00</td>
+      <td>
+        <label for="q1">Quantity:<br></label>
+        <input type="number" name="q1" id="q1" value="1" min="0" max="1000"  /></td>
+      <td><img src="add-to-cart-button1.gif" width="150" height="36" alt="add to cart button" onclick="add2Cart(this, 'q1')" /></td>
+    </tr>
+    <tr>
+      <td><img src="product2.jpg" width="140" height="140" alt="Buy Sand" /></td>
+      <td><p><span id='pr2'>Golden Sand</span> of Morocco!</p>
+        <p>Sand was used for therapy since very old times. Ancient Greeks and Romans treated rheumatisms by immersing the patient into hot sand, from the chest to the feet. Sand contains sediments of all types of rocks, from quartz to silicon and limestone, and residues of minerals such as sodium, magnesium, potassium, iodine, chlorine, and calcium. Our fine sand, imported directly from Morocco, has shown to improve the signs and symptoms of rheumatisms and arthrosis.  It also helps with the consolidation of fractures (sand speeds up healing of dislocations and sprains), skin diseases and allergies, inflammations of the airways, and osteoporosis.</p>
+	  </td>
+      <td>Price:<br>$3.50</td>
+      <td><label for="q2">Quantity:<br></label>
+        <input type="number" name="q2" id="q2" value="2" min="0" max="1000"  /></td>
+      <td><img src="add-to-cart-button1.gif" width="150" height="36" alt="add to cart button" onclick="add2Cart(this, 'q2');"/></td>
+    </tr>
+    <tr>
+      <td><img src="product3.jpg" width="140" height="140" alt="Buy Kamchatka Snow"/></td>
+      <td><p><span id='pr3'>Crystally White Snow</span> of Russian Kamchatka!</p>
+        <p>We ship tons of snow around the world for various events and functions every year. Feel the spirit of Christmas, play snowballs, and make a snowman with your friends. You also don't need a refrigerator if you have our snow. It even becomes water when it melts! 
+        </p></td>
+      <td>Price:<br>$2.00</td>
+      <td><label for="q3">Quantity:<br></label>
+        <input type="number" name="q3" id="q3" value="3" min="0" max="1000" /></td>
+      <td><img src="add-to-cart-button1.gif" width="150" height="36" alt="add to cart button" onclick="add2Cart(this, 'q3')" /></td>
+    </tr>
+    <tr>
+      <td><img src="product4.jpg" width="140" height="140" alt="Buy Sun"/></td>
+      <td><p><span id='pr4'>Smily Sun</span> from beckoning Brazil!</p>
+        <p>Who doesn't love smiling Brazilian sun?<br>
+        Ok Ok, some don't I guess, but hey.</p></td>
+      <td>Price:<br>$3.00</td>
+      <td><label for="q4">Quantity:<br></label>
+        <input type="number" name="q4" id="q4" value="4" min="0" max="1000" /></td>
+      <td><img src="add-to-cart-button1.gif" width="150" height="36" alt="add to cart button" onclick="add2Cart(this, 'q4');" /></td>
+    </tr>
+    <tr>
+      <td colspan="5" align="right">
+		<form><input type="button" value="Proceed to Cart" onclick="javascript:window.location.href='cart.html';" />&nbsp; &nbsp; &nbsp;<br> <br>
+			<input type="button" name="clear" value="Empty the Cart" onclick="clearCart();" />&nbsp; &nbsp; &nbsp;
+		</form> 
+      </td>
+      </tr>
+  </tbody>
+</table>
+<footer>
+  Copyright &copy; 2016 Piece of Nature.
+</footer>
+</div>
+</body>
+</html>

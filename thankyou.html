@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>MARIIA GREGORY's Final Project Cart</title>
+	<link href="layout.css" type="text/css" rel="stylesheet">
+	
+<script type="text/javascript" src="guest-functions.js"></script>
+<script type="text/javascript" src="cart-functions.js"></script>
+<script>
+var receipt = localStorage.getItem('receipt'); // retrieve the recepit information created on "checkout" page
+if(!receipt) { receipt = "Sorry, this page is empty, totally empty."; }
+	
+// if the current user is a registered user, clear his/her cart	
+var userNo = localStorage.getItem('userNo');
+if(userNo!='-1') {
+	userAcc = JSON.parse(localStorage.getItem('userAccounts'));
+	clearUserCart(userAcc,userNo);
+	localStorage.setItem('userAccounts', JSON.stringify(userAcc) ); 
+} else { // otherwise, clear guest cart 
+	clearGuestCart(); // this function is defined in "cart-functions.js" file
+}
+
+window.onload = function() {
+	setGuest();		updateCartTotal();	
+	localStorage.removeItem('receipt');	// delete all personal info that "receipt" contains after displaying it
+	
+	// Set timer to close the current "thankyou" page and redirect to "shop.html" in 2 minutes
+	// So if the user forgets to close the page and leaves, his personal information will disappear in 2 min
+	var timeOut = 120; // # of seconds before the page is closed
+	setTimeout(function() { window.location.href='shop.html'; }, timeOut*1000 ); // in 2 minutes, redirect to "shop" page
+	
+	var timeLeft = document.getElementById('timeLeft'); // Also, show user how many seconds are left until the page reload
+	
+	setInterval(ticker, 1000);
+	
+	function ticker() {
+		timeOut--;
+		var min = parseInt(timeOut/60); sec = timeOut-(min*60);
+		timeLeft.innerHTML = min + " min " + sec + " sec";
+	}
+}
+
+</script>
+		
+</head>
+
+<body>
+<header><a href='index.html'><img src="mycompany-logo.png" width="798" height="82" alt="My Company" /></a></header>
+<nav>
+<form id="form1" name="form1" method="post">
+<p>Choose a page to visit:<br>
+  <select name="select" id="select" onchange="javascript:window.location.href=this.value;">
+    <option value="index.html" selected="selected">Home</option>
+    <option value="shop.html">Shop</option>
+    <option value="cart.html" >Cart</option>
+ 	<option value="checkout.html">Checkout</option>
+  </select><br/><input type="button" value="GO!" onclick="window.location.href='index.html';" />
+</p>
+</form>
+
+<p>&nbsp;</p>
+
+<div id="divGuestArea">&nbsp;</div>
+</nav>
+
+<main>
+	<h1>Thank you!</h1>
+	<p id="thankMsg"><script>document.write(receipt);</script></p>
+	<hr/>
+	<p>This page will disappear in <span id='timeLeft'>&nbsp;</span>...</p>
+	
+	<footer>
+	Copyright &copy; 2016 Piece of Nature.
+	</footer>
+</main>
+</body>
+</html>

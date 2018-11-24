@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>MARIIA GREGORY's Final Project Cart</title>
+	<link href="layout.css" type="text/css" rel="stylesheet">
+	
+<script type="text/javascript" src="guest-functions.js"></script>
+<script type="text/javascript" src="cart-functions.js"></script>
+
+<script>
+
+var products=[];
+	products[0] = { id : "q1", name: "Sea Water", description : "Mediterranean Sea Water from Greek Islands", price : "5.00" };
+	products[1] = { id : "q2", name: "Sand", description : "Golden Sand of Morocco Dunes", price : "3.50" };
+	products[2] = { id : "q3", name: "Snow", description : "Crystally Clean Snow of Kamchatka", price : "2.00" };
+	products[3] = { id : "q4", name: "Sun", description : "Smily Brazilian Sun", price : "3.00" };
+
+// store the copy of 'products' array in LS as 'productsTemplate', so all its objects' properties are accessible from other pages (after "cart.html" has been visited) 
+localStorage.setItem('productsTemplate', JSON.stringify(products));
+
+window.onload = function() { setGuest();  updateCartTotal();}
+
+</script>
+		
+</head>
+
+<body>
+<header><a href='index.html'><img src="mycompany-logo.png" width="798" height="82" alt="My Company" /></a></header>
+<nav>
+<form id="form1" name="form1" method="post">
+<p>Choose a page to visit:<br>
+  <select name="select" id="select" onchange="javascript:window.location.href=this.value;">
+    <option value="index.html">Home</option>
+    <option value="shop.html">Shop</option>
+    <option value="cart.html" selected="selected">Cart</option>
+ 	<option value="checkout.html">Checkout</option>
+  </select>
+</p>
+</form>
+
+<p>&nbsp;</p>
+
+<div id="divGuestArea">&nbsp;</div>
+</nav>
+
+<div id="main">
+<h1>Cart</h1>
+<p>Below is the current contents of your shopping cart:</p>
+<form name='cartForm'>
+	<table id="cartTable" border="1" cellpadding="8">
+		<script>showCart();</script>
+	</table>
+	<p><input type="button" value="Chose Other Products" onclick="window.location.href='shop.html';" />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; or 
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="button" value="Proceed to Cheeckout" onclick="window.location.href='checkout.html';" /></p>
+</form>
+<footer>
+Copyright &copy; 2016 Piece of Nature.
+</footer>
+</div>
+</body>
+</html>
