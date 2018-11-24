@@ -1,0 +1,56 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>MARIIA GREGORY's Final Project Home</title>
+	<link href="layout.css" type="text/css" rel="stylesheet">
+	
+<script type="text/javascript" src="guest-functions.js"></script>
+<script type="text/javascript" src="cart-functions.js"></script>
+<script>
+window.onload = function() { 	setGuest(); updateCartTotal(); 	}
+</script>
+</head>
+
+<body id="homePage">
+<header><a href='index.html'><img src="mycompany-logo.png" width="798" height="82" alt="My Company" /></a></header>
+<nav>
+<form id="form1" name="form1" method="post">
+<p>Choose a page to visit:<br>
+  <select name="select" id="select" onchange="window.location.href=this.value;" ><!-- also works - onchange="javascript:window.location.assign(this.value);"-->
+    <option value="index.html" selected="selected">Home</option>
+    <option value="shop.html">Shop</option>
+    <option value="cart.html">Cart</option>
+ 	<option value="checkout.html">Checkout</option>
+  </select>
+</p>
+</form>
+<p>&nbsp;</p>
+
+<div id="divGuestArea">&nbsp;</div>
+</nav>
+
+<div id="main" class="intro">
+<h1>Home</h1>
+<p>Nice to see you here! We are selling whatever you may only dream about. Do you want a star from the night sky? Let us know, and we will sell it to you! "Piece Of Nature" Unlimited company is always to you service.</p>
+<p><img src="mycompany-photo.png" class="co-photo" width="200" height="200" alt="Piece Of Nature welcomes you!"/></p>
+
+<p>Have you ever dreamed about holidays that will imprint in your memory forever, so you can tell your grandchildren about it? Do you like peaceful days in a fertile garden, or may be you prefer adventurous ones in Amazon rainforests, accompanied by crocodiles and snakes? Whatever your personal human nature is, we offer our professional assistance in transferring you to any biogeological and ecological environment on Earth you can only imagine of. Forget your insurance certificate at home! Where you are about to go it does not work, just because no insurance can save you in wild nature. You are completely on your own. Sounds exciting, doesn't it? So what are you waiting for, let's start our journey!</p>
+<h2>About Us</h2>
+<p>If you are still with us, we are shaking your hand. We value our customers, especially courageous ones, like you. The production you are going to purchase today from our store has no instructions, neither it has a guarantee. It is just nature, wild nature that is unpredictable, and that's why it is so beautiful, respectful, and desirable.</p>
+<a href="shop.html" title="Click here to Shop with us!"><img src='wereopen.png' width="250" height="222" alt="Welcome to Shop" /></a>
+<p>Our primary products as of today include: </p>
+<ul>
+	<li>Azure sea water from Mediterranean coast of Greece</li>
+	<li>Golden shiny Sand from mysterious Morocco</li>
+	<li>Dazzling white fresh snow from volcanic Kamchatka</li>
+	<li>Generously beaming sun of joyful Brazil</li>
+</ul>
+<p>What else would your soul be wishing for? Let us know by contacting us, and we will find it, we will tamper it, we will package it and send it straight to your home address, wherever you are, our dreamful friend. Come visit us in our comfortable office located in our beautiful castle high in mountains. Only brave ones reach us before they are eaten by dragons.</p>
+<footer>
+Copyright &copy; 2016 Piece of Nature.
+</footer>
+</div>
+</body>
+</html>
