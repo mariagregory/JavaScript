@@ -7,7 +7,7 @@ function processOrder() {
 // Then it generates a receipt, stores its content in LS, and writes it in the receipt area of a "thankyou.html" page, where it redirects the user to
 	var receipt = document.getElementById("receipt"); 
 	var fullName = document.forms['checkout'].fullName.value;
-	 if(!fullName) { fullName = "Current Resident"; }  
+// 	 if(!fullName) { fullName = "Current Resident"; }  
 	var firstName = document.getElementById('firstName').innerHTML;
 	var grandTotal = document.getElementById("total");
 		if(grandTotal) { grandTotal = parseFloat(grandTotal.innerHTML); }
