@@ -69,9 +69,11 @@ function setGuest()	{
 	var signInButton = "<input type='submit' value='Sign-In' onclick='updateName()' />";
 	var signOutButton = "<input type='submit' value='Sign-Out' onclick='clearName()' />";
 	
-	var formContents = "<form name='sign-in'>" + textBox + "<br/>";
+	var formContents = textBox + "<br/>";
 		formContents += userName=="Guest" ? signInButton : signOutButton;
-		formContents += "</form>";
 	
-	guestArea.innerHTML = "<p>Welcome <span id='firstName'>" + firstName + "</span>!</p>" + formContents;
+	guestArea.innerHTML = "<form name='sign-in'>"
+                        + "<div class='avatar'><img width='65px' src='https://www.tutorialrepublic.com/examples/images/avatar.png'/></div>"
+                        + "<p>Welcome <span id='firstName'>" + firstName + "</span>!</p>"
+                        + formContents + "</form>";
 }
