@@ -18,11 +18,15 @@ nav {
 	height: 750px;  /* set a height as needed if main page text is wrapping below sidebar; */
 	text-align: center;
 }
-h1 { font-family: "Comic Sans MS", cursive, sans-serif; color: DarkRed; 
+h1, h2 { font-family: "Comic Sans MS", cursive, sans-serif; color: DarkRed;
 }
+h2 {  font-size: 1.1em;}
+
 #main {
-	margin-left: 220px; /* Match this to nav's width above to keep content away from nav */	
+	margin-left: 220px; /* Match this to nav's width above to keep content away from nav */
 }
+a {  color: DarkRed; }
+
 #homePage #main {
 	line-height: 1.5;
 }
@@ -76,11 +80,13 @@ div#howToChangeQ { /* text block on Shop page, explaining how to make changes in
 	font-style: italic;
 }
 fieldset {
-	margin: 20px 0 20px 0;
+	margin: 20px auto;
+    padding: 20px 0;
 	width: auto;
 }
+
 span.notice { color: darkred; font-weight: bold; 
 }
 img[src='add-to-cart-button1.gif']:hover {
-	content: url("add-to-cart-button-yellow.gif"); // 'content' statement for img selector doesn't work in Firefox
+	content: url("add-to-cart-button-yellow.gif"); // /*'content' statement for img selector doesn't work in Firefox */
 }
