@@ -5,27 +5,30 @@ function processOrder() {
 // This function is called when user presses "Complete Payment" button on "checkout" page.
 // The function reads values from all fields, checks if all required fields are filled, calculates the tax sum and a total sum to pay.
 // Then it generates a receipt, stores its content in LS, and writes it in the receipt area of a "thankyou.html" page, where it redirects the user to
-	var receipt = document.getElementById("receipt"); 
+	var receipt = document.getElementById("receipt");
 	var fullName = document.forms['checkout'].fullName.value;
-// 	 if(!fullName) { fullName = "Current Resident"; }  
+       
+       /* console.log(fullName);  */
+
 	var firstName = document.getElementById('firstName').innerHTML;
 	var grandTotal = document.getElementById("total");
 		if(grandTotal) { grandTotal = parseFloat(grandTotal.innerHTML); }
 		else { grandTotal = 0; }
-	var taxRate = 8/100, tax;
+	var tax, taxRate = 8/100;
 	var phoneNo = document.forms["checkout"].phoneNo.value;
 	var cardNo = document.forms["checkout"].cardNo.value;
-	var goAheadWithReceipt = true; // a flag to indicate if it's ok to print a receipt. "True" by default	
-	
+	var goAheadWithReceipt = true; // a flag to indicate if it's ok to print a receipt. "True" by default
+
 	var getShipping = function() {
 		var elements = document.forms["checkout"].shipping$;
+        console.log("Shipping element 1: "+elements[0]);
 		for(var i=0; i<elements.length; i++) {
 			if(elements[i].checked) {
 				return parseFloat(elements[i].value);
-			} 
-		} return -1; // This should never happen because I set 'checked' attribute to the 1st radio button, so at least 1 option is selected 
+			}
+		} return -1; // This should never happen because I set 'checked' attribute to the 1st radio button, so at least 1 option is selected
 	};
-	
+
 	var address = {
 		streetNo: document.forms["checkout"].streetNo.value,
 		city: document.forms["checkout"].city.value,
@@ -33,27 +36,27 @@ function processOrder() {
 		zip: document.forms["checkout"].zip.value,
 		postCode: document.forms["checkout"].postCode.value,
 		country: document.forms["checkout"].country.value,
-		showAddress: function() {		
+		showAddress: function() {
 			return this.streetNo + ', ' + this.city + ' ' + this.state + ', ' + this.zip + ' ' + this.country;
 		}
 	};
-	
+
 	var getPayMethod = function() {
 		var payMethods = document.forms["checkout"].payMethod;
 		for(var i=0; i<payMethods.length; i++) {
 			if(payMethods[i].selected) {
 				return payMethods[i].value;
-			} 
+			}
 		} return 'cash';
 	};
-	// determine if it's OK to proceed with the receipt generation	
-	goAheadWithReceipt = reqFieldsFilled(document.getElementsByClassName('required')) && isValidPhoneNo(phoneNo) && isValidCardNo(cardNo); 
-			
+	// determine if it's OK to proceed with the receipt generation
+	goAheadWithReceipt = reqFieldsFilled(document.getElementsByClassName('required')) && isValidPhoneNo(phoneNo) && isValidCardNo(cardNo);
+
 	if(goAheadWithReceipt) {
-		var receiptContents; // a local variable to store the receipt contents before writing it to 'receipt' innerHTML 
+		var receiptContents; // a local variable to store the receipt contents before writing it to 'receipt' innerHTML
 							//(so </p> tag is not inserted automatically between statements
 		tax = grandTotal*taxRate;
-		receiptContents = firstName + ", thank you for your business!<br/>" 
+		receiptContents = firstName + ", thank you for your business!<br/>"
 			+ "Your order will be shipped to the address: " + address.showAddress() +"<br/>"
 			+ "Receiver: " + fullName + "<br/>"
 			+ "Subtotal: $" + grandTotal.toFixed(2) + "<br/>"
@@ -63,11 +66,13 @@ function processOrder() {
 		if(!grandTotal) {
 			receiptContents += "<br/><span class='notice'>*** Congratulation! You've just bought NOTHING for only " + getShipping() + " bucks!!! ***</span><br/><br/>";
 		}
-		receiptContents += "Thank you for paying with " + getPayMethod() + "!";	
-		
+		receiptContents += "Thank you for paying with " + getPayMethod() + "!";
+
 		// copy the receipt contents to 'receipt' div area surrounding it with 'p' tags
 		localStorage.setItem('receipt', receiptContents);
-		window.location.href = "thankyou.html"; // redirect to "thankyou" page, where the receipt is to be displayed
+
+        /*console.log(receiptContents);*/
+	   	window.location.href = "thankyou.html"; // redirect to "thankyou" page, where the receipt is to be displayed
 	}
 }
 // check if all required fields are filled. If the first non-filled required field is found, it selects it and does NOT let to generate a receipt.
