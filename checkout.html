@@ -96,83 +96,55 @@
 		<script>showCart();</script>
 	</table>
     </div>
-
-
 </div>
+
 <p align='right'><input type="button" value="Back to Your Cart" onclick="window.location.href='cart.html';" /></p>
+<p><span class="redAsterisk">*</span> indicates a required field.</p>
 
+<form name="checkout" action="thankyou.html" method="post" class="form-horizontal">
+	<label>Your Full Name: <input type='text' name='fullName' placeholder='Type your FULL name here' /></label>
+	<fieldset><legend>Please choose a shipping option:</legend>
+		<label><input type="radio" name="shipping$" value="2" checked />Standard Shipping ($2)</label>&nbsp;&nbsp;&nbsp;
+		<label><input type="radio" name="shipping$" value="5" />2-Day Shipping ($5)</label>&nbsp;&nbsp;&nbsp;
+		<label><input type="radio" name="shipping$" value="10" />Overnight Shipping ($10)</label>
+	</fieldset>
 
-<form name="checkout" id="checkout"  method="post" class="form-horizontal">                             <!--action="thankyou.html"-->
+	<fieldset><legend>Please ender your shipping address</legend>
+		<label>Street and House #<input type="text" name="streetNo" class="required" /></label>
+        <label>City/Town<input type="text" name="city" class="required" /></label><br/>
+        <label>State / Region / Province<input type="text" name="state" class="required"  /></label><br/>
+        <label>Zip code<input type="text" name="zip" class="required"  /></label>
+		<label>Postal code<input type="text" name="postCode" /></label><br/>
+		<label>Country<input type="text" name="country" class="required"  /></label>	
+	</fieldset>
 
-    <p class="text-primary"><span class="redAsterisk">*</span> indicates a required field.</p>
+	<label>Your phone number:<input type="text" id="phoneNo" name="phoneNo" maxlength="12" class="required"/></label><span id="phoneHint">(use 10-digit, 123-456-7890, or (123) 456-7890 format)</span>
 
+	<fieldset><legend>Payment Details</legend>
+		<select name="payMethod" >
+			<option value="Visa">Visa Credit</option><option value="MasterCard">MasterCard Credit</option>
+			<option value="American Express">American Express Credit</option>
+			<option value="Debit">Debit Card</option><option value="PayPal">PayPal</option>
+		</select><br/>
+		<label>Card#:<input type="text" name="cardNo" maxlength="16" class="required" /></label><span id="cardHint">(use 16-digit sequence, no other characters please.</span><br/>
+		<label>Expiration Month
+			<select name="expMonth" class="required">
+				<option name="expMonth" value="Jan">January</option><option name="expMonth" value="Feb">February</option>
+				<option name="expMonth" value="Mar">March</option><option name="expMonth" value="Apr">April</option>
+				<option name="expMonth" value="May">May</option><option name="expMonth" value="Jun">June</option>
+				<option name="expMonth" value="Jul">July</option><option name="expMonth" value="Aug">August</option>
+				<option name="expMonth" value="Sep">September</option><option name="expMonth" value="Oct">October</option>
+				<option name="expMonth" value="Nov">November</option><option name="expMonth" value="Dec">December</option>
+			</select>
+		</label>
+		<label>Expiration Year <select name="expYear" class="required"><script>expandYears("expYear");</script></select></label><br/>
 
-    <div class="form-group">
-    	<label for="fullName" class="control-label col-xs-2">Your Full Name:
-            <input type='text' name='fullName' placeholder='Type your FULL name here' />
-        </label>
-    </div>
+	</fieldset>
 
-<!--	<div class="form-group">-->
-	    <fieldset>
-    	    <legend ><h2><!-- class="required">-->Choose a shipping option:</h2></legend>
-    		<label for="shipping$" class="radio-inline control-label"><input type="radio" name="shipping$" value="2" checked />Standard Shipping ($2)</label>&nbsp;&nbsp;
-    		<label for="shipping$" class="radio-inline control-label"><input type="radio" name="shipping$" value="5" />2-Day Shipping ($5)&nbsp;&nbsp;</label>
-    		<label for="shipping$" class="radio-inline control-label"><input type="radio" name="shipping$" value="10" />Overnight Shipping ($10) </label>
-    	</fieldset>
+	<p><input type="button" value="Complete Payment" onClick="processOrder();" />	</p>
+</form>
 
-
-<!--    	<fieldset><legend><h2>Please ender your shipping address</h2></legend>-->
-    		<label for="street" class="control-label col-xs-2">Street and House #<input type="text" name="street" class="required" /></label>
-            <label for="city" class="control-label col-xs-2">City/Town<input type="text" name="city" class="required" /></label><br/>
-            <label for="state" class="control-label col-xs-2">State / Region / Province<input type="text" name="state" class="required"  /></label><br/>
-            <label fir="zip" class="control-label col-xs-2">Zip code <input type="text" name="zip" class="required"  /></label>
-    		<label for="postal" class="control-label col-xs-2">Postal code<input type="text" name="postal" /><br/>    </label>
-    		<label for="country" class="control-label col-xs-2">Country<input type="text" name="country" class="required"  /></label>
-
-        	<label for="phoneNo" class="control-label col-xs-2">Your phone number:
-            <input type="text" id="phoneNo" name="phoneNo" maxlength="12" class="required"/>
-                <span id="phoneHint">(use 10-digit, 123-456-7890, or (123) 456-7890 format)</span> </label>
-  <!--    	</fieldset> -->
-<!--     </div> -->
-
-    <div class="form-group">
-    	<fieldset><legend><h2>Payment Details</h2></legend>
-    		<label for="payMethod" class="control-label col-xs-2">
-            <select name="payMethod" class="required">
-    			<option value="Visa">Visa Credit</option>
-                <option value="MasterCard">MasterCard Credit</option>
-    			<option value="American Express">American Express Credit</option>
-    			<option value="Debit">Debit Card</option><option value="PayPal">PayPal</option>
-    		</select>
-            </label>
-            <br/>
-
-            <div class="form-group">
-        		<label for="cardNo">Card#:
-                <input type="text" name="cardNo" maxlength="16" class="form-control" class="required" />
-                <span class="help-block">(use 16-digit sequence, no other characters please.)</span><br/>
-                </label>
-                 <br/>
-                <label for="expMonth">Expiration Month
-                <select name="expMonth" class="required">
-                    <option name="expMonth" value="Jan">January</option><option name="expMonth" value="Feb">February</option>
-                    <option name="expMonth" value="Mar">March</option><option name="expMonth" value="Apr">April</option>
-                    <option name="expMonth" value="May">May</option><option name="expMonth" value="Jun">June</option>
-                    <option name="expMonth" value="Jul">July</option><option name="expMonth" value="Aug">August</option>
-                    <option name="expMonth" value="Sep">September</option><option name="expMonth" value="Oct">October</option>
-                    <option name="expMonth" value="Nov">November</option><option name="expMonth" value="Dec">December</option>
-                </select>
-                  </label>
-
-        		<label for="expYear">Expiration Year <select name="expYear" class="required"><script>expandYears("expYear");</script></select></label>
-                <br/>
-            </div>
-    	</fieldset>
-     </div>
-
-	<button value="Complete Payment" class="btn btn-primary" onClick="processOrder();">Complete Payment</button>
-</form>	
+	
 <div id="receipt">&nbsp;</div>
 
 <footer>
