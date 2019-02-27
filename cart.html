@@ -74,17 +74,19 @@ window.onload = function() { setGuest();  updateCartTotal();}
 <div id="main">
 <h1>Cart</h1>
 <p>Below is the current contents of your shopping cart:</p>
-<div class="row">
+ <div class="row">
     <div class="div-sm-12 div-md-8 div-md-offset-2 div-lg-6 div-lg-offset-3">
         <table id="cartTable" border="1" cellpadding="8" class="table table-hover table-bordered">
         		<script>showCart();</script>
         </table>
     </div>
 </div>
-	
+
 <form name='cartForm'>
+
 	<p><input type="button" value="Chose Other Products" onclick="window.location.href='shop.html';" />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; or 
-	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="button" value="Proceed to Cheeckout" onclick="window.location.href='checkout.html';" /></p>
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    <input type="button" value="Proceed to Cheeckout"  onclick="window.location.href='checkout.html';" /></p>
 </form>
 <footer>
 Copyright &copy; 2016 Piece of Nature.
