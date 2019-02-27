@@ -10,6 +10,7 @@ function showCart()	{
 	
 	if(!products) { // 'products' array is accessible only in "cart.html" page, this function is also called from "checkout.html" page, in which case use LS version
 		var products = JSON.parse(localStorage.getItem('productsTemplate'));
+        console.log(products.length+" products");
 	}
 
 	var userNo = localStorage.getItem('userNo'); // determine, if the current user is a registered user
@@ -21,13 +22,14 @@ function showCart()	{
 			}
 		}
 	} else { // part for Guest user
-		for(var i=0; i<products.length; i++) {
+		for(var i=0; i<products.length; i++) { // 'products' Doesn't work for a guest
 			products[i].quantity = parseInt( JSON.parse( localStorage.getItem(products[i].id) ) );
+            console.log(products[i].id+' has '+products[i].quantity);
 		}	
 	}
 			 
 	for(var i=0; i<products.length; i++) {	// calculate all values to be displayed in "cartTable"
-		if( products[i].quantity > 0 ) { 
+		if( products[i].quantity > 0 ) {
 			prodsOrdered++;
 			products[i].subtotal = products[i].quantity * products[i].price;
 			grandTotal += products[i].subtotal;
@@ -40,11 +42,11 @@ function showCart()	{
 	} cartTable.innerHTML += "<tr><th colspan='5'>Grand Total (before tax)</th><th id='total'>" + grandTotal.toFixed(2) + "</th></tr>";
 	
 	if(!prodsOrdered) {
-		cartTable.innerHTML = "<fieldset><p>Your shopping cart is now empty!</p><p>We recommend you to go straight to <a href='shop.html'>Shopping page</a> and fill it out.</p></fieldset>";
+		cartTable.innerHTML = "<fieldset><p class='text-center'>Your shopping cart is now empty!<br/><br/><a href='shop.html' class='btn btn-primary'>Go Shopping now</a></p></fieldset>";
 	}
 	
 	// After the cart is displayed, delete the temporary properties of the original 'products' array
-	for(var i=0; i<products.length; i++) {	
+	for(var i=0; i<products.length; i++) {
 		delete products[i].quantity;
 	}
 }
@@ -63,7 +65,7 @@ function displayRow(rowData, index) {
 	return row;
 }
 
-function updateCartTotal() { 
+function updateCartTotal() {
 // Add "Your cart currently contains (N) items" below the Sign-in/Sign-out area on the left side of the page (in the 'nav' area)
 // First, check if the current user has an account. If yes, retrieve his/her cart and show its summary
 // If we deal with Guest, try to retrieve q# variables (such as q1, q2, etc.) from LS and read their values to create a summary
@@ -121,7 +123,7 @@ function modifyCart(prodIndex, checkBox) {
 	}
 	var inputQ = document.getElementById(products[prodIndex].id + 'inCart'); // ex. 'q1inCart' textbox in the "cartTable" area
 	if(checkBox.checked) {
-		inputQ.removeAttribute('disabled'); 
+		inputQ.removeAttribute('disabled');
 		inputQ.onchange = function() {	
 			var userNo = JSON.parse(localStorage.getItem('userNo'));
 			if(userNo!='-1') { // if a registered user is active, retrieve his cart and make changes
@@ -134,7 +136,7 @@ function modifyCart(prodIndex, checkBox) {
 			var newSubtotal = inputQ.value * products[prodIndex].price; // update values of both subtotal and grandTotal
 			var oldSubtotal = document.getElementById("sub" + prodIndex).innerHTML;
 			var newTotal = document.getElementById("total").innerHTML - oldSubtotal + newSubtotal;
-						
+
 			document.getElementById("sub" + prodIndex).innerHTML = newSubtotal.toFixed(2);
 			document.getElementById("total").innerHTML = newTotal.toFixed(2);
 			
