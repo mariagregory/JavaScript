@@ -1,6 +1,6 @@
 The imaginary online store selling.... what?
 
-<a href="https://uralmasha.github.io/JavaScript/">
-  <img src="https://github.com/uralmasha/JavaScript/blob/master/shop-screen.JPG"/>
-<img src="https://github.com/uralmasha/JavaScript/blob/master/cart-screen.JPG"/>
+<a href="https://mariagregory.github.io/JavaScript/">
+  <img src="shop-screen.JPG"/>
+<img src="cart-screen.JPG"/>
 </a>
